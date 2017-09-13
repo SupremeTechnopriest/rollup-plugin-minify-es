@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/futurist/rollup-plugin-minify.git"
+    "url": "git+https://github.com/edgemesh/rollup-plugin-minify-es.git"
   },
   "keywords": [
     "rollup",
@@ -24,12 +24,12 @@
     "minify",
     "uglify"
   ],
-  "author": "James Yang <jamesyang999@gmail.com>",
+  "author": "Randy Lebeau <rl@edgemesh.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/futurist/rollup-plugin-minify/issues"
+    "url": "https://github.com/edgemesh/rollup-plugin-minify-es/issues"
   },
-  "homepage": "https://github.com/futurist/rollup-plugin-minify#readme",
+  "homepage": "https://github.com/edgemesh/rollup-plugin-minify-es#readme",
   "devDependencies": {
     "gulp-bump": "^2.4.0",
     "gulp-git": "^1.12.0",
