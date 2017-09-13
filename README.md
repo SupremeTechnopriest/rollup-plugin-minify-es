@@ -32,6 +32,7 @@ You can pass [uglify-es options](https://github.com/mishoo/UglifyJS2/tree/harmon
         minify({ iife: {
           dest: 'iife.min.js',
           mangle: false,
+          sourceMaps: true,
           sourceMapUrl: 'localhost/out.js.map'
         }})
     ]
