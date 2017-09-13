@@ -1,0 +1,43 @@
+{
+  "name": "rollup-plugin-minify-es",
+  "version": "1.0.0",
+  "description": "Rollup plugin to minify generated format into new minified file, with source maps, using uglify-es.",
+  "main": "dist/rollup-plugin-minify-es.js",
+  "jsnext:main": "dist/rollup-plugin-minify-es.mjs",
+  "module": "dist/rollup-plugin-minify-es.mjs",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "make": "gulp bump && npm run build",
+    "pretest": "npm run build",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/futurist/rollup-plugin-minify.git"
+  },
+  "keywords": [
+    "rollup",
+    "rollup-plugin",
+    "minify",
+    "uglify"
+  ],
+  "author": "James Yang <jamesyang999@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/futurist/rollup-plugin-minify/issues"
+  },
+  "homepage": "https://github.com/futurist/rollup-plugin-minify#readme",
+  "devDependencies": {
+    "gulp-bump": "^2.4.0",
+    "gulp-git": "^1.12.0",
+    "mocha": "^3.1.2",
+    "rollup": "^0.36.3",
+    "rollup-plugin-buble": "^0.14.0"
+  },
+  "dependencies": {
+    "uglify-es": "^3.1.0"
+  }
+}
