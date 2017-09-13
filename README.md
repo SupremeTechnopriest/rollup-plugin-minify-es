@@ -1,8 +1,6 @@
 # rollup-plugin-minify-es
 Rollup plugin to minify generated format into new minified file, with source maps, using [uglify-es](https://github.com/mishoo/UglifyJS2/tree/harmony).
 
-[![CircleCI](https://circleci.com/gh/edgemesh/rollup-plugin-minify-es.svg?style=svg)](https://circleci.com/gh/edgemesh/rollup-plugin-minify-es)
-
 ## Install
 
 ``` bash
