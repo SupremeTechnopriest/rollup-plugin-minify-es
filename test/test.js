@@ -1,82 +1,45 @@
-const assert  = require('assert')
-const { format:f } = require('util')
-const { exec } = require('child_process')
-const path = require('path')
-const { readFileSync, unlinkSync } = require('fs')
-const { rollup } = require('rollup')
-const { minify } = require('uglify-es')
-const lib = require('../')
+const assert = require('assert');
+const rollup = require('rollup').rollup;
+const readFile = require('fs').readFileSync;
+const minify = require('../');
 
-const base = path.join(__dirname, './fixtures/')
-process.chdir(base)
+test('minify', () => {
+    return rollup({
+        entry: 'test/fixtures/unminified.js',
+        plugins: [
+            minify()
+        ]
+    }).then(bundle => {
+        const result = bundle.generate({ format: 'cjs' });
+        expect(Object.keys(result)).toHaveLength(2);
+        expect(result.code).toEqual('"use strict";var a=5;a<3&&console.log(4);\n');
+        expect(result.map).toBeFalsy();
+    });
+});
 
-function compareFile(file, str) {
-  assert.equal(readFileSync(file, 'utf8'), str)
-}
+test('minify via minify options', () => {
+    return rollup({
+        entry: 'test/fixtures/empty.js',
+        plugins: [
+            minify({ output: { comments: 'all' } })
+        ]
+    }).then(bundle => {
+        const result = bundle.generate({ banner: '/* package name */', format: 'cjs' });
+        expect(Object.keys(result)).toHaveLength(2);
+        expect(result.code).toEqual('/* package name */\n"use strict";\n');
+        expect(result.map).toBeFalsy();
+    });
+});
 
-function testResult(source, opt, target, done) {
-
-  const result = minify(
-    readFileSync(source, 'utf8'),
-    opt
-  )
-
-  if(target) {
-    compareFile(target, result.code)
-    let dir = path.parse(target).dir
-    if(opt.sourceMaps) compareFile(target+'.map', result.map)
-  }
-
-  // clean up
-  unlinkSync(source)
-  if(target) {
-    unlinkSync(target)
-    if(opt.sourceMaps) unlinkSync(target+'.map')
-  }
-  done()
-}
-
-/**
- * run rollup with plugin option, and the real uglifyOption
- * @param {object} option plugin option
- * @param {object} uglifyOption the transformed uglify option
- * @param {function} done
- */
-function run(option, uglifyOption, done) {
-  const iife = option.iife
-  const minifyDest = typeof iife=='string' ? iife : iife.dest
-  const iifeDest = 'dist/iife.js'
-  rollup({
-    entry: entry,
-    plugins: [lib(option)],
-  }).then(bundle => {
-    bundle.write({
-      format: 'iife',
-      dest: iifeDest
-    }).then(() => {
-      testResult(iifeDest, uglifyOption, minifyDest, done)
-    }).catch(e=>done(e))
-  }).catch(e=>done(e))
-}
-
-const entry = 'unminified.js'
-
-describe('test', function () {
-  this.timeout(15000)
-
-  it('should be minified with sourcemaps', function (done) {
-    run({iife: { dest: 'dist/min.js', sourceMaps: true }}, { sourceMap: { filename: 'min.js.map', url: 'min.js.map'}}, done)
-  })
-
-  it('should be minified with custom sourceMapUrl', function (done) {
-    run({iife: { dest: 'dist/min.js', sourceMaps: true, sourceMapUrl: 'source.js.map'}}, {sourceMap: { filename: 'source.js.map', url: 'source.js.map'}}, done)
-  })
-
-  it('should not be minified with empty options', function (done) {
-    run({iife: {}}, {}, done)
-  })
-
-  it('should not be minified with empty string', function (done) {
-    run({iife: ''}, {}, done)
-  })
-})
+test('minify with sourcemaps', () => {
+    return rollup({
+        entry: 'test/fixtures/sourcemap.js',
+        plugins: [
+            minify()
+        ]
+    }).then(bundle => {
+        const result = bundle.generate({ format: 'cjs', sourceMap: true });
+        expect(Object.keys(result)).toHaveLength(2);
+        expect(result.map).toBeTruthy();
+    });
+});

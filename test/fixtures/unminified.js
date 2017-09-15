@@ -1,10 +1,6 @@
-/* file comments */
+"use strict";
+var a = 5;
 
-var base=10
-
-function sum(left, right) {
-  return left+right
+if (a < 3) {
+	console.log(4);
 }
-
-// output
-console.log(sum(2,3))
