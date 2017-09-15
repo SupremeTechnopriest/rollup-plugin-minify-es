@@ -1,41 +1,74 @@
-# rollup-plugin-minify-es
-Rollup plugin to minify generated format into new minified file, with source maps, using [uglify-es](https://github.com/mishoo/UglifyJS2/tree/harmony).
+# rollup-plugin-minify-es [![Travis Build Status][travis-img]][travis]
+
+[Rollup](https://github.com/rollup/rollup) plugin to minify generated bundle.
 
 ## Install
 
-``` bash
-npm install rollup-plugin-minify-es
+```sh
+npm i rollup-plugin-minify-es -D
 ```
 
 ## Usage
 
-``` javascript
-import { rollup } from 'rollup'
-import minify from 'rollup-plugin-minify-es'
+```js
+import { rollup } from 'rollup';
+import minify from 'rollup-plugin-minify-es';
 
 rollup({
-    entry: 'src.js',
+    entry: 'main.js',
     plugins: [
-        minify({iife: 'iife.min.js', cjs: 'cjs.min.js'})
+        minify()
     ]
-})
+});
 ```
 
-This will generate minified `"iife.min.js"` file with `iife` format, so and `cjs`.
+## Options
 
-You can pass [uglify-es options](https://github.com/mishoo/UglifyJS2/tree/harmony#api-reference), as below:
-
-``` javascript
-    plugins: [
-        minify({ iife: {
-          dest: 'iife.min.js',
-          mangle: false,
-          sourceMaps: true,
-          sourceMapUrl: 'localhost/out.js.map'
-        }})
-    ]
+```js
+minify(options)
 ```
 
-## License
+`options` – default: `{}`, type: `object`. [UglifyJS API options](https://github.com/mishoo/UglifyJS2/tree/harmony#api-reference)
+
+`minifier` – default: `require('minify-js').minify`, type: `function`. Module to use as a minifier. You can use other versions (or forks) of UglifyJS instead default one.
+
+
+```js
+import { rollup } from 'rollup';
+import minify from 'rollup-plugin-minify';
+import { minify } from 'minify-es';
+
+rollup({
+    entry: 'main.js',
+    plugins: [
+        minify({}, minify)
+    ]
+});
+```
+
+## Examples
+
+### Comments
+
+If you'd like to preserve comments (for licensing for example), then you can specify a function to do this like so:
+
+```js
+minify({
+  output: {
+    comments: function(node, comment) {
+        var text = comment.value;
+        var type = comment.type;
+        if (type == "comment2") {
+            // multiline comment
+            return /@preserve|@license|@cc_on/i.test(text);
+        }
+    }
+  }
+});
+```
+
+See [UglifyJS documentation](https://github.com/mishoo/UglifyJS2/tree/harmony#keeping-comments-in-the-output) for further reference.
+
+# License
 
 MIT
